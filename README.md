@@ -1,57 +1,97 @@
 # README
-# 🏪 dbLicorera – Diseño de base de datos
+# # 🏪 dbLicorera — Sistema de gestión de inventario
 
-## 📌 Descripción
+Proyecto académico de diseño e implementación de una base de datos relacional para una licorera, desarrollado con SQL Server.
 
-**dbLicorera** es un proyecto académico enfocado en el diseño y desarrollo de una base de datos para la gestión de información de una licorera.
+El sistema permite organizar y consultar información de productos, marcas, sucursales, ciudades e inventarios, aplicando conceptos de modelado relacional, integridad referencial y programación en SQL.
 
-El proyecto busca organizar la información relacionada con productos, marcas, sucursales, ciudades, tipos de sucursal e inventarios, aplicando conceptos de bases de datos relacionales, modelado de datos y normalización.
+Actualmente, el proyecto también contempla el aprendizaje y la exploración de la adaptación del modelo relacional a MongoDB.
 
-Actualmente, el proyecto parte de un modelo relacional desarrollado en SQL y contempla su adaptación a MongoDB como parte del proceso de aprendizaje de diferentes tecnologías de bases de datos.
+---
 
-## 🎯 Objetivos
+## 📊 Diagrama entidad-relación
 
-- Diseñar una estructura de base de datos organizada y consistente.
-- Establecer relaciones entre las diferentes entidades del sistema.
-- Implementar claves primarias (PK) y claves foráneas (FK).
-- Aplicar principios de normalización hasta la tercera forma normal (3FN).
-- Explorar la adaptación de un modelo relacional a una base de datos NoSQL.
+El siguiente diagrama representa la estructura de la base de datos y las relaciones entre sus entidades.
+
+![Diagrama entidad-relación de dbGuayabo](DER.png)
 
 ## 🗄️ Estructura de la base de datos
 
-El modelo relacional está compuesto por las siguientes tablas:
+El modelo relacional está compuesto por seis tablas:
 
 | Tabla | Descripción |
 |---|---|
-| `Ciudad` | Almacena información de las ciudades. |
-| `TipoSucursal` | Clasifica los tipos de sucursales. |
-| `Marca` | Contiene las marcas de los productos. |
-| `Producto` | Almacena la información de los productos. |
-| `Sucursal` | Registra las sucursales de la licorera. |
-| `Inventario` | Relaciona los productos con las sucursales y permite organizar su inventario. |
+| `Ciudad` | Almacena las ciudades donde se encuentran las sucursales. |
+| `TipoSucursal` | Clasifica las sucursales según su tipo. |
+| `Marca` | Registra las marcas de los productos. |
+| `Producto` | Almacena los productos, sus precios y marcas. |
+| `Sucursal` | Contiene la información de las sucursales. |
+| `Inventario` | Relaciona los productos con las sucursales y registra sus cantidades. |
 
-La tabla `Inventario` funciona como entidad intermedia entre `Producto` y `Sucursal`, permitiendo establecer la relación entre los productos disponibles y las diferentes sucursales.
+La tabla `Inventario` utiliza una clave primaria compuesta por `IdSucursal` e `IdProducto`, evitando registrar dos veces el mismo producto para una misma sucursal.
+
+## ⚙️ Funcionalidades implementadas
+
+### Vistas (Views)
+
+Se desarrollaron dos vistas para facilitar la consulta de información:
+
+- **`vwDetalleInventario`:** reúne información de ciudades, tipos de sucursal, sucursales, productos, marcas y cantidades disponibles.
+- **`vwProductosDisponibles`:** muestra los productos registrados en los inventarios de las sucursales, filtrando aquellos cuya cantidad es mayor que cero.
+
+### Procedimientos almacenados (Stored Procedures)
+
+El proyecto incluye tres procedimientos:
+
+- **`spListInventoryxSucursal`:** consulta los productos y sus cantidades para una sucursal específica y verifica que esta exista.
+- **`spAddProducto`:** permite registrar productos, comprobando que el identificador no esté repetido y que la marca exista.
+- **`spCountProductsxSucursal`:** calcula la cantidad de productos registrados en el inventario de una sucursal mediante un parámetro de salida.
+
+### Triggers
+
+Se implementaron dos triggers:
+
+- **`trgAddProducto`:** se ejecuta después de insertar un producto y permite consultar los registros insertados.
+- **`trgAddInventario`:** utiliza la operación `INSTEAD OF INSERT` para validar la existencia de la sucursal y del producto, y comprobar que la combinación no esté registrada previamente antes de insertar.
 
 ## 🛠️ Tecnologías y herramientas
 
-- **SQL:** diseño y estructuración de la base de datos relacional.
-- **MongoDB Compass:** herramienta utilizada para explorar la adaptación del proyecto a MongoDB.
-- **GitHub:** almacenamiento y control del proyecto.
+- **Microsoft SQL Server:** creación, estructuración y gestión de la base de datos.
+- **SQL:** consultas, relaciones, vistas, procedimientos almacenados y triggers.
+- **MongoDB Compass:** herramienta utilizada en el proceso de aprendizaje y exploración de la adaptación del modelo a MongoDB.
+- **Git y GitHub:** almacenamiento y seguimiento de los cambios del proyecto.
 
 ## 📚 Conceptos aplicados
 
-- Modelado de bases de datos relacionales.
-- Relaciones entre tablas.
-- Claves primarias y foráneas.
+- Diseño y modelado de bases de datos relacionales.
+- Relaciones uno a muchos (1:N).
+- Claves primarias (PK) y claves foráneas (FK).
+- Claves primarias compuestas.
 - Integridad referencial.
-- Normalización de datos hasta 3FN.
-- Exploración de bases de datos NoSQL.
+- Normalización de datos hasta tercera forma normal (3FN).
+- Consultas SQL con `INNER JOIN`.
+- Vistas y procedimientos almacenados.
+- Triggers y validación de operaciones.
 
-## 🚧 Estado del proyecto
+## 🚀 Instalación y ejecución
+
+Para ejecutar el proyecto se necesita una instancia de Microsoft SQL Server y una herramienta para ejecutar consultas SQL, como SQL Server Management Studio (SSMS).
+
+1. Clonar o descargar este repositorio.
+2. Abrir el archivo `LicoreraBD.sql` en SQL Server Management Studio.
+3. Ejecutar el script completo.
+4. Verificar la creación de las tablas y los registros de prueba.
+5. Consultar las vistas y ejecutar los procedimientos almacenados incluidos en el archivo.
+
+**Nota:** el repositorio se llama `dbLicorera`, mientras que el script crea la base de datos con el nombre `dbGuayabo`.
+
+## 📌 Estado del proyecto
 
 **En desarrollo.**
 
-El modelo relacional en SQL constituye la base del proyecto. Actualmente se está trabajando en su adaptación a MongoDB, con el propósito de comprender las diferencias entre el almacenamiento relacional y el orientado a documentos.
+La implementación relacional en SQL Server cuenta con su estructura, datos de prueba, vistas, procedimientos almacenados y triggers.
+
+Se contempla como siguiente etapa la adaptación del modelo a MongoDB, con el objetivo de explorar las diferencias entre las bases de datos relacionales y las orientadas a documentos.
 
 ## 👨‍💻 Autor
 
@@ -60,4 +100,4 @@ El modelo relacional en SQL constituye la base del proyecto. Actualmente se est�
 Estudiante de Tecnología en Desarrollo de Software  
 Institución Universitaria Pascual Bravo
 
-Proyecto desarrollado con fines académicos y de aprendizaje.
+Proyecto académico desarrollado como parte del proceso de formación en diseño y gestión de bases de datos.cadémicos y de aprendizaje.
