@@ -1,4 +1,4 @@
-# dblicorera
+# README
 # 🏪 dbLicorera – Diseño de base de datos
 
 ## 📌 Descripción
